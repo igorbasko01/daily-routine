@@ -4,6 +4,7 @@ import 'package:daily_routine/blocs/routine_event.dart';
 import 'package:daily_routine/blocs/routine_state.dart';
 import 'package:daily_routine/models/routine.dart';
 import 'package:daily_routine/repositories/in_memory_routine_repository.dart';
+import 'package:daily_routine/repositories/routine_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -33,4 +34,61 @@ void main() {
                   state.routines[0].time == DateTime(2023, 11, 30, 8, 0);
             }),
           ]);
+
+  blocTest<RoutineBloc, RoutineState>(
+      'updating a routine emits a LoadedAllRoutineState with the updated routine',
+      build: () => RoutineBloc(InMemoryRoutineRepository()),
+      act: (bloc) {
+        bloc.add(AddRoutineEvent(Routine(
+            id: 1,
+            name: 'Morning Exercise',
+            time: DateTime(2023, 11, 30, 8, 0))));
+        bloc.add(UpdateRoutineEvent(Routine(
+            id: 1,
+            name: 'Morning Exercise',
+            time: DateTime(2023, 11, 30, 8, 0),
+            isCompleted: true)));
+      },
+      expect: () => [
+            predicate<LoadedAllRoutineState>((state) {
+              return state.routines.length == 1 &&
+                  state.routines[0].id == 1 &&
+                  state.routines[0].name == 'Morning Exercise' &&
+                  state.routines[0].time == DateTime(2023, 11, 30, 8, 0);
+            }),
+            predicate<LoadedAllRoutineState>((state) {
+              return state.routines.length == 1 &&
+                  state.routines[0].id == 1 &&
+                  state.routines[0].name == 'Morning Exercise' &&
+                  state.routines[0].time == DateTime(2023, 11, 30, 8, 0) &&
+                  state.routines[0].isCompleted;
+            }),
+          ]);
+
+  blocTest<RoutineBloc, RoutineState>(
+    'updating a routine that does not exist emits an Error RoutineNotFoundState',
+    build: () => RoutineBloc(InMemoryRoutineRepository()),
+    act: (bloc) {
+      bloc.add(AddRoutineEvent(Routine(
+          id: 1,
+          name: 'Morning Exercise',
+          time: DateTime(2023, 11, 30, 8, 0))));
+      bloc.add(UpdateRoutineEvent(Routine(
+          id: 2,
+          name: 'Morning Exercise',
+          time: DateTime(2023, 11, 30, 8, 0),
+          isCompleted: true)));
+    },
+    expect: () => [
+      predicate<LoadedAllRoutineState>((state) {
+        return state.routines.length == 1 &&
+            state.routines[0].id == 1 &&
+            state.routines[0].name == 'Morning Exercise' &&
+            state.routines[0].time == DateTime(2023, 11, 30, 8, 0);
+      }),
+      predicate<ErrorRoutineState>((state) {
+        return state.exception is RoutineNotFoundException;
+      }),
+    ],
+  );
 }

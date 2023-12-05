@@ -9,3 +9,9 @@ class LoadedAllRoutineState extends RoutineState {
 
   LoadedAllRoutineState(this.routines);
 }
+
+class ErrorRoutineState extends RoutineState {
+  final Exception exception;
+
+  ErrorRoutineState(this.exception);
+}

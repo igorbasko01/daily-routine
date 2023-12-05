@@ -9,3 +9,9 @@ class AddRoutineEvent extends RoutineEvent {
 
   AddRoutineEvent(this.routine);
 }
+
+class UpdateRoutineEvent extends RoutineEvent {
+  final Routine routine;
+
+  UpdateRoutineEvent(this.routine);
+}

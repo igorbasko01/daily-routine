@@ -11,6 +11,7 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
   RoutineBloc(this._routineRepository) : super(InitialRoutineState()) {
     on<LoadAllRoutineEvent>(_loadAllRoutines);
     on<AddRoutineEvent>(_addRoutine);
+    on<UpdateRoutineEvent>(_updateRoutine);
   }
 
   FutureOr<void> _loadAllRoutines(LoadAllRoutineEvent event, Emitter<RoutineState> emit) async {
@@ -22,5 +23,15 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     await _routineRepository.addRoutine(event.routine);
     var allRoutines = await _routineRepository.getAllRoutines();
     emit(LoadedAllRoutineState(allRoutines));
+  }
+
+  FutureOr<void> _updateRoutine(UpdateRoutineEvent event, Emitter<RoutineState> emit) async {
+    try {
+      await _routineRepository.updateRoutine(event.routine);
+      var allRoutines = await _routineRepository.getAllRoutines();
+      emit(LoadedAllRoutineState(allRoutines));
+    } on RoutineNotFoundException catch (e) {
+      emit(ErrorRoutineState(e));
+    }
   }
 }
