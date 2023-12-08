@@ -16,6 +16,11 @@ class Routine {
         id: id, name: name, time: time, isCompleted: isCompleted);
   }
 
+  toggleCompleted() {
+    return Routine(
+        id: id, name: name, time: time, isCompleted: !isCompleted);
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

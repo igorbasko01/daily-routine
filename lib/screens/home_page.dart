@@ -1,5 +1,7 @@
 import 'package:daily_routine/blocs/routine_bloc.dart';
+import 'package:daily_routine/blocs/routine_event.dart';
 import 'package:daily_routine/blocs/routine_state.dart';
+import 'package:daily_routine/models/routine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,7 +29,7 @@ class HomePage extends StatelessWidget {
             );
           } else {
             return Center(
-              child: Text('You have ${state.routines.length} routines.'),
+              child: _listOfRoutines(state.routines),
             );
           }
         } else {
@@ -36,6 +38,48 @@ class HomePage extends StatelessWidget {
           );
         }
       }),
+    );
+  }
+  
+  Widget _listOfRoutines(List<Routine> routines) {
+    return ListView.builder(
+      itemCount: routines.length,
+      itemBuilder: (context, index) {
+        var routine = routines[index];
+        return ListTile(
+          leading: Checkbox(
+            key: const Key('checkButton'),
+            value: routine.isCompleted,
+            onChanged: (value) {
+              BlocProvider.of<RoutineBloc>(context).add(
+                  UpdateRoutineEvent(routine.toggleCompleted()));
+            },
+          ),
+          title: Text(routines[index].name),
+          subtitle: Text(routines[index].time.toString()),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                key: const Key('editButton'),
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/editRoutine',
+                      arguments: routine);
+                },
+              ),
+              IconButton(
+                key: const Key('deleteButton'),
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  BlocProvider.of<RoutineBloc>(context)
+                      .add(DeleteRoutineEvent(routine.id));
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
