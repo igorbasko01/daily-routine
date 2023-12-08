@@ -2,9 +2,9 @@ import 'package:daily_routine/models/routine.dart';
 
 abstract class RoutineRepository {
   Future<List<Routine>> getAllRoutines();
-  Future<Routine> addRoutine(Routine routine);
-  Future<void> updateRoutine(Routine routine);
-  Future<void> deleteRoutine(int id);
+  Future<List<Routine>> addRoutine(Routine routine);
+  Future<List<Routine>> updateRoutine(Routine routine);
+  Future<List<Routine>> deleteRoutine(int id);
 }
 
 class RoutineNotFoundException implements Exception {

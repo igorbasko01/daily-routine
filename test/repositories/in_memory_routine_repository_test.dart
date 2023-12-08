@@ -36,10 +36,9 @@ void main() {
       final dateTime = DateTime(2023, 11, 30, 8, 0);
       final routine1 = Routine(id: 1, name: 'Morning Exercise', time: dateTime);
       final routine2 = Routine(id: 1, name: 'Morning Exercise', time: dateTime);
-      final addedRoutine1 = await repository.addRoutine(routine1);
+      await repository.addRoutine(routine1);
       final addedRoutine2 = await repository.addRoutine(routine2);
-      expect(addedRoutine1, routine1);
-      expect(addedRoutine2, routine2.copyWith(id: 2));
+      expect(addedRoutine2, [routine1, routine2.copyWith(id: 2)]);
     });
 
     test('Updating a routine updates the routine', () async {

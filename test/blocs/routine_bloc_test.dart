@@ -37,12 +37,13 @@ void main() {
 
   blocTest<RoutineBloc, RoutineState>(
       'updating a routine emits a LoadedAllRoutineState with the updated routine',
-      build: () => RoutineBloc(InMemoryRoutineRepository()),
+      build: () => RoutineBloc(InMemoryRoutineRepository(initialRoutines: [
+            Routine(
+                id: 1,
+                name: 'Morning Exercise',
+                time: DateTime(2023, 11, 30, 8, 0))
+          ])),
       act: (bloc) {
-        bloc.add(AddRoutineEvent(Routine(
-            id: 1,
-            name: 'Morning Exercise',
-            time: DateTime(2023, 11, 30, 8, 0))));
         bloc.add(UpdateRoutineEvent(Routine(
             id: 1,
             name: 'Morning Exercise',
@@ -54,12 +55,6 @@ void main() {
               return state.routines.length == 1 &&
                   state.routines[0].id == 1 &&
                   state.routines[0].name == 'Morning Exercise' &&
-                  state.routines[0].time == DateTime(2023, 11, 30, 8, 0);
-            }),
-            predicate<LoadedAllRoutineState>((state) {
-              return state.routines.length == 1 &&
-                  state.routines[0].id == 1 &&
-                  state.routines[0].name == 'Morning Exercise' &&
                   state.routines[0].time == DateTime(2023, 11, 30, 8, 0) &&
                   state.routines[0].isCompleted;
             }),
@@ -67,12 +62,11 @@ void main() {
 
   blocTest<RoutineBloc, RoutineState>(
     'updating a routine that does not exist emits an Error RoutineNotFoundState',
-    build: () => RoutineBloc(InMemoryRoutineRepository()),
+    build: () => RoutineBloc(InMemoryRoutineRepository(initialRoutines: [
+      Routine(
+          id: 1, name: 'Morning Exercise', time: DateTime(2023, 11, 30, 8, 0))
+    ])),
     act: (bloc) {
-      bloc.add(AddRoutineEvent(Routine(
-          id: 1,
-          name: 'Morning Exercise',
-          time: DateTime(2023, 11, 30, 8, 0))));
       bloc.add(UpdateRoutineEvent(Routine(
           id: 2,
           name: 'Morning Exercise',
@@ -80,12 +74,38 @@ void main() {
           isCompleted: true)));
     },
     expect: () => [
-      predicate<LoadedAllRoutineState>((state) {
-        return state.routines.length == 1 &&
-            state.routines[0].id == 1 &&
-            state.routines[0].name == 'Morning Exercise' &&
-            state.routines[0].time == DateTime(2023, 11, 30, 8, 0);
+      predicate<ErrorRoutineState>((state) {
+        return state.exception is RoutineNotFoundException;
       }),
+    ],
+  );
+
+  blocTest(
+    'deleting a routine emits a LoadedAllRoutineState without the deleted routine',
+    build: () => RoutineBloc(InMemoryRoutineRepository(initialRoutines: [
+      Routine(
+          id: 1, name: 'Morning Exercise', time: DateTime(2023, 11, 30, 8, 0))
+    ])),
+    act: (bloc) {
+      bloc.add(DeleteRoutineEvent(1));
+    },
+    expect: () => [
+      predicate<LoadedAllRoutineState>((state) {
+        return state.routines.isEmpty;
+      }),
+    ],
+  );
+
+  blocTest(
+    'deleting a routine that does not exist emits an Error RoutineNotFoundState',
+    build: () => RoutineBloc(InMemoryRoutineRepository(initialRoutines: [
+      Routine(
+          id: 1, name: 'Morning Exercise', time: DateTime(2023, 11, 30, 8, 0))
+    ])),
+    act: (bloc) {
+      bloc.add(DeleteRoutineEvent(2));
+    },
+    expect: () => [
       predicate<ErrorRoutineState>((state) {
         return state.exception is RoutineNotFoundException;
       }),

@@ -15,3 +15,9 @@ class UpdateRoutineEvent extends RoutineEvent {
 
   UpdateRoutineEvent(this.routine);
 }
+
+class DeleteRoutineEvent extends RoutineEvent {
+  final int id;
+
+  DeleteRoutineEvent(this.id);
+}
