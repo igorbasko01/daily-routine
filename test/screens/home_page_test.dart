@@ -132,4 +132,34 @@ void main() {
     var deleteButtonFinder = find.byKey(const Key('deleteButton'));
     expect(deleteButtonFinder, findsOneWidget);
   });
+
+  testWidgets('the page has a floating button for adding routines when there are no routines', (widgetTester) async {
+    when(() => mockRoutineBloc?.state).thenReturn(LoadedAllRoutineState([]));
+
+    await widgetTester.pumpWidget(MaterialApp(
+      home: BlocProvider<RoutineBloc>.value(
+        value: mockRoutineBloc!,
+        child: const HomePage(),
+      ),
+    ));
+
+    var floatingButtonFinder = find.byKey(const Key('addRoutineButton'));
+    expect(floatingButtonFinder, findsOneWidget);
+  });
+
+  testWidgets('the page has a floating button for adding routines when there are routines', (widgetTester) async {
+    when(() => mockRoutineBloc?.state).thenReturn(LoadedAllRoutineState([
+      Routine(id: 1, name: 'Morning Exercise', time: DateTime(2023, 11, 30, 8, 0))
+    ]));
+
+    await widgetTester.pumpWidget(MaterialApp(
+      home: BlocProvider<RoutineBloc>.value(
+        value: mockRoutineBloc!,
+        child: const HomePage(),
+      ),
+    ));
+
+    var floatingButtonFinder = find.byKey(const Key('addRoutineButton'));
+    expect(floatingButtonFinder, findsOneWidget);
+  });
 }

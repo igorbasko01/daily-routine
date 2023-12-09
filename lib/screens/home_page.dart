@@ -38,6 +38,13 @@ class HomePage extends StatelessWidget {
           );
         }
       }),
+      floatingActionButton: FloatingActionButton(
+        key: const Key('addRoutineButton'),
+        onPressed: () {
+          Navigator.pushNamed(context, '/addRoutine');
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
   
