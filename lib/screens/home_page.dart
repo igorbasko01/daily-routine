@@ -2,6 +2,7 @@ import 'package:daily_routine/blocs/routine_bloc.dart';
 import 'package:daily_routine/blocs/routine_event.dart';
 import 'package:daily_routine/blocs/routine_state.dart';
 import 'package:daily_routine/models/routine.dart';
+import 'package:daily_routine/screens/add_routine_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -41,7 +42,10 @@ class HomePage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         key: const Key('addRoutineButton'),
         onPressed: () {
-          Navigator.pushNamed(context, '/addRoutine');
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => BlocProvider.value(
+                value: BlocProvider.of<RoutineBloc>(context),
+                child: const AddRoutinePage())));
         },
         child: const Icon(Icons.add),
       ),

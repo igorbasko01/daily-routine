@@ -41,11 +41,12 @@ class _AddRoutinePageState extends State<AddRoutinePage> {
 
   void _saveRoutine() {
     var currentDate = DateTime.now();
-    BlocProvider.of<RoutineBloc>(context).add(AddRoutineEvent(Routine(
+    context.read<RoutineBloc>().add(AddRoutineEvent(Routine(
         id: 1,
         name: _nameController.text,
         time: DateTime(currentDate.year, currentDate.month, currentDate.day,
             _timeOfDay!.hour, _timeOfDay!.minute))));
+    Navigator.of(context).pop();
   }
 
   @override

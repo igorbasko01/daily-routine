@@ -3,6 +3,7 @@ import 'package:daily_routine/blocs/routine_bloc.dart';
 import 'package:daily_routine/blocs/routine_event.dart';
 import 'package:daily_routine/blocs/routine_state.dart';
 import 'package:daily_routine/models/routine.dart';
+import 'package:daily_routine/screens/add_routine_page.dart';
 import 'package:daily_routine/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -161,5 +162,22 @@ void main() {
 
     var floatingButtonFinder = find.byKey(const Key('addRoutineButton'));
     expect(floatingButtonFinder, findsOneWidget);
+  });
+
+  testWidgets('pressing the addRoutineButton navigates to the AddRoutinePage', (widgetTester) async {
+    when(() => mockRoutineBloc?.state).thenReturn(LoadedAllRoutineState([]));
+
+    await widgetTester.pumpWidget(MaterialApp(
+      home: BlocProvider<RoutineBloc>.value(
+        value: mockRoutineBloc!,
+        child: const HomePage(),
+      ),
+    ));
+
+    var floatingButtonFinder = find.byKey(const Key('addRoutineButton'));
+    expect(floatingButtonFinder, findsOneWidget);
+    await widgetTester.tap(floatingButtonFinder);
+    await widgetTester.pumpAndSettle();
+    expect(find.byType(AddRoutinePage), findsOneWidget);
   });
 }
