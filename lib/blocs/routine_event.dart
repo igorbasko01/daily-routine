@@ -8,6 +8,17 @@ class AddRoutineEvent extends RoutineEvent {
   final Routine routine;
 
   AddRoutineEvent(this.routine);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is AddRoutineEvent &&
+      other.routine == routine;
+  }
+
+  @override
+  int get hashCode => routine.hashCode;
 }
 
 class UpdateRoutineEvent extends RoutineEvent {
