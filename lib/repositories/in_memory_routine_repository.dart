@@ -1,13 +1,23 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:daily_routine/models/routine.dart';
 import 'package:daily_routine/repositories/routine_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InMemoryRoutineRepository implements RoutineRepository {
   final List<Routine> _routines;
+  final String _routinesKey = 'routines';
 
   InMemoryRoutineRepository({List<Routine>? initialRoutines})
       : _routines = initialRoutines ?? [];
+
+  Future<void> initialize() async {
+    if (_routines.isNotEmpty) {
+      return;
+    }
+    _routines.addAll(await loadRoutines());
+  }
 
   @override
   Future<List<Routine>> getAllRoutines() async {
@@ -20,6 +30,7 @@ class InMemoryRoutineRepository implements RoutineRepository {
         (_routines.isEmpty) ? 1 : (_routines.map((e) => e.id).reduce(max) + 1);
     final newRoutine = routine.copyWith(id: newId);
     _routines.add(newRoutine);
+    await saveRoutines(_routines);
     return _routines;
   }
 
@@ -32,6 +43,7 @@ class InMemoryRoutineRepository implements RoutineRepository {
       throw RoutineNotFoundException('Routine with id ${routine.id} not found');
     }
     _routines[index] = routine;
+    await saveRoutines(_routines);
     return _routines;
   }
 
@@ -44,6 +56,27 @@ class InMemoryRoutineRepository implements RoutineRepository {
       throw RoutineNotFoundException('Routine with id $id not found');
     }
     _routines.removeAt(index);
+    await saveRoutines(_routines);
     return _routines;
+  }
+
+  /// Saves the routines to shared preferences.
+  @override
+  Future<void> saveRoutines(List<Routine> routines) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String json = jsonEncode(routines.map((routine) => routine.toJson()).toList());
+    await prefs.setString(_routinesKey, json);
+  }
+
+  /// Loads the routines from shared preferences.
+  @override
+  Future<List<Routine>> loadRoutines() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? json = prefs.getString(_routinesKey);
+    if (json == null) {
+      return [];
+    }
+    List<dynamic> jsonList = jsonDecode(json);
+    return jsonList.map((json) => Routine.fromJson(json)).toList();
   }
 }
