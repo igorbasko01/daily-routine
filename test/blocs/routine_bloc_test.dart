@@ -6,8 +6,14 @@ import 'package:daily_routine/models/routine.dart';
 import 'package:daily_routine/repositories/in_memory_routine_repository.dart';
 import 'package:daily_routine/repositories/routine_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   blocTest<RoutineBloc, RoutineState>(
     'emits empty list when no routines were added',
     build: () => RoutineBloc(InMemoryRoutineRepository()),
