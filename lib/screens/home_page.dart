@@ -72,14 +72,6 @@ class HomePage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                key: const Key('editButton'),
-                icon: const Icon(Icons.edit),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/editRoutine',
-                      arguments: routine);
-                },
-              ),
-              IconButton(
                 key: const Key('deleteButton'),
                 icon: const Icon(Icons.delete),
                 onPressed: () {
