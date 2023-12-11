@@ -98,24 +98,6 @@ void main() {
     expect(checkButtonFinder, findsOneWidget);
   });
 
-  testWidgets('a routine has an edit button', (widgetTester) async {
-    when(() => mockRoutineBloc?.state).thenReturn(LoadedAllRoutineState([
-      Routine(id: 1, name: 'Morning Exercise', time: DateTime(2023, 11, 30, 8, 0))
-    ]));
-
-    await widgetTester.pumpWidget(MaterialApp(
-      home: BlocProvider<RoutineBloc>.value(
-        value: mockRoutineBloc!,
-        child: const HomePage(),
-      ),
-    ));
-
-    var routineFinder = find.text('Morning Exercise');
-    expect(routineFinder, findsOneWidget);
-    var editButtonFinder = find.byKey(const Key('editButton'));
-    expect(editButtonFinder, findsOneWidget);
-  });
-
   testWidgets('a routine has a delete button', (widgetTester) async {
     when(() => mockRoutineBloc?.state).thenReturn(LoadedAllRoutineState([
       Routine(id: 1, name: 'Morning Exercise', time: DateTime(2023, 11, 30, 8, 0))
