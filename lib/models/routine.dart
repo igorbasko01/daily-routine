@@ -11,14 +11,16 @@ class Routine {
       required this.time,
       this.isCompleted = false});
 
-  copyWith({required int id}) {
+  Routine copyWith({int? id, String? name, DateTime? time, bool? isCompleted}) {
     return Routine(
-        id: id, name: name, time: time, isCompleted: isCompleted);
+        id: id ?? this.id,
+        name: name ?? this.name,
+        time: time ?? this.time,
+        isCompleted: isCompleted ?? this.isCompleted);
   }
 
   toggleCompleted() {
-    return Routine(
-        id: id, name: name, time: time, isCompleted: !isCompleted);
+    return Routine(id: id, name: name, time: time, isCompleted: !isCompleted);
   }
 
   Map<String, dynamic> toJson() {
@@ -51,9 +53,6 @@ class Routine {
 
   @override
   int get hashCode {
-    return id.hashCode ^
-        name.hashCode ^
-        time.hashCode ^
-        isCompleted.hashCode;
+    return id.hashCode ^ name.hashCode ^ time.hashCode ^ isCompleted.hashCode;
   }
 }

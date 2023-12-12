@@ -32,3 +32,5 @@ class DeleteRoutineEvent extends RoutineEvent {
 
   DeleteRoutineEvent(this.id);
 }
+
+class ResetAllRoutineEvent extends RoutineEvent {}

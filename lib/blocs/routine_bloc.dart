@@ -12,6 +12,7 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     on<AddRoutineEvent>(_addRoutine);
     on<UpdateRoutineEvent>(_updateRoutine);
     on<DeleteRoutineEvent>(_deleteRoutine);
+    on<ResetAllRoutineEvent>(_resetAllRoutines);
   }
 
   FutureOr<void> _loadAllRoutines(LoadAllRoutineEvent event, Emitter<RoutineState> emit) async {
@@ -40,5 +41,10 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     } on RoutineNotFoundException catch (e) {
       emit(ErrorRoutineState(e));
     }
+  }
+
+  FutureOr<void> _resetAllRoutines(ResetAllRoutineEvent event, Emitter<RoutineState> emit) async {
+    var routines = await _routineRepository.resetAllRoutines();
+    emit(LoadedAllRoutineState(routines));
   }
 }

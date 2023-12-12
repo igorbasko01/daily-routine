@@ -60,16 +60,32 @@ class InMemoryRoutineRepository implements RoutineRepository {
     return _routines;
   }
 
-  /// Saves the routines to shared preferences.
+  /// Resets all routines in the repository.
   @override
+  Future<List<Routine>> resetAllRoutines() async {
+    var now = DateTime.now();
+    var newRoutines = _routines
+        .map((routine) {
+          var newDate = DateTime(now.year, now.month, now.day,
+              routine.time.hour, routine.time.minute);
+          return routine.copyWith(time: newDate, isCompleted: false);
+        })
+        .toList();
+    _routines.clear();
+    _routines.addAll(newRoutines);
+    await saveRoutines(_routines);
+    return _routines;
+  }
+
+  /// Saves the routines to shared preferences.
   Future<void> saveRoutines(List<Routine> routines) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String json = jsonEncode(routines.map((routine) => routine.toJson()).toList());
+    String json =
+        jsonEncode(routines.map((routine) => routine.toJson()).toList());
     await prefs.setString(_routinesKey, json);
   }
 
   /// Loads the routines from shared preferences.
-  @override
   Future<List<Routine>> loadRoutines() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? json = prefs.getString(_routinesKey);

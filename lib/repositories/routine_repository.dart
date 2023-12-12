@@ -5,8 +5,7 @@ abstract class RoutineRepository {
   Future<List<Routine>> addRoutine(Routine routine);
   Future<List<Routine>> updateRoutine(Routine routine);
   Future<List<Routine>> deleteRoutine(int id);
-  Future<void> saveRoutines(List<Routine> routines);
-  Future<List<Routine>> loadRoutines();
+  Future<List<Routine>> resetAllRoutines();
 }
 
 class RoutineNotFoundException implements Exception {
