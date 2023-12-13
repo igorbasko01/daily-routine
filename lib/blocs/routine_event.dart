@@ -34,3 +34,5 @@ class DeleteRoutineEvent extends RoutineEvent {
 }
 
 class ResetAllRoutineEvent extends RoutineEvent {}
+
+class HandleDayChangeRoutineEvent extends RoutineEvent {}

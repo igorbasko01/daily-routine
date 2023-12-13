@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:daily_routine/blocs/routine_event.dart';
 import 'package:daily_routine/blocs/routine_state.dart';
+import 'package:daily_routine/models/routine.dart';
 import 'package:daily_routine/repositories/routine_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,6 +14,7 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     on<UpdateRoutineEvent>(_updateRoutine);
     on<DeleteRoutineEvent>(_deleteRoutine);
     on<ResetAllRoutineEvent>(_resetAllRoutines);
+    on<HandleDayChangeRoutineEvent>(_handleDayChange);
   }
 
   FutureOr<void> _loadAllRoutines(LoadAllRoutineEvent event, Emitter<RoutineState> emit) async {
@@ -46,5 +48,22 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
   FutureOr<void> _resetAllRoutines(ResetAllRoutineEvent event, Emitter<RoutineState> emit) async {
     var routines = await _routineRepository.resetAllRoutines();
     emit(LoadedAllRoutineState(routines));
+  }
+
+  FutureOr<void> _handleDayChange(HandleDayChangeRoutineEvent event, Emitter<RoutineState> emit) async {
+    var routines = await _routineRepository.getAllRoutines();
+    if (routines.isEmpty) {
+      emit(LoadedAllRoutineState(routines));
+    } else {
+      var firstRoutine = routines.first;
+      var now = DateTime.now();
+      var routineTime = DateTime(now.year, now.month, now.day, firstRoutine.time.hour, firstRoutine.time.minute);
+      if (now.isAfter(routineTime)) {
+        var resetRoutines = await _routineRepository.resetAllRoutines();
+        emit(LoadedAllRoutineState(resetRoutines));
+      } else {
+        emit(LoadedAllRoutineState(routines));
+      }
+    }
   }
 }
