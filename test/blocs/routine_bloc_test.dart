@@ -412,5 +412,45 @@ void main() {
                     !state.routines[2].isCompleted;
               }),
             ]);
+
+    blocTest(
+        'Handle day change does not update the isCompleted if not day change',
+        build: () {
+          var now = DateTime.now();
+          return RoutineBloc(InMemoryRoutineRepository(initialRoutines: [
+            Routine(
+                id: 1,
+                name: 'Morning Exercise',
+                time: DateTime(now.year, now.month, now.day, 8, 0),
+                isCompleted: true),
+            Routine(
+                id: 2,
+                name: 'Afternoon Exercise',
+                time: DateTime(now.year, now.month, now.day, 13, 0),
+                isCompleted: true),
+            Routine(
+                id: 3,
+                name: 'Evening Exercise',
+                time: DateTime(now.year, now.month, now.day, 18, 0),
+                isCompleted: true)
+          ]));
+        },
+        act: (bloc) {
+          bloc.add(HandleDayChangeRoutineEvent());
+        },
+        expect: () => [
+              predicate<LoadedAllRoutineState>((state) {
+                return state.routines.length == 3 &&
+                    state.routines[0].id == 1 &&
+                    state.routines[0].name == 'Morning Exercise' &&
+                    state.routines[0].isCompleted &&
+                    state.routines[1].id == 2 &&
+                    state.routines[1].name == 'Afternoon Exercise' &&
+                    state.routines[1].isCompleted &&
+                    state.routines[2].id == 3 &&
+                    state.routines[2].name == 'Evening Exercise' &&
+                    state.routines[2].isCompleted;
+              }),
+            ]);
   });
 }

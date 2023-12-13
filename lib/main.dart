@@ -5,16 +5,32 @@ import 'package:daily_routine/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+class AppLifecycleObserver extends WidgetsBindingObserver {
+  final RoutineBloc routineBloc;
+
+  AppLifecycleObserver(this.routineBloc);
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      routineBloc.add(HandleDayChangeRoutineEvent());
+    }
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var routineRepository = InMemoryRoutineRepository();
   await routineRepository.initialize();
-  runApp(MyApp(routineRepository: routineRepository));
+  var routineBloc = RoutineBloc(routineRepository);
+  var appLifecycleObserver = AppLifecycleObserver(routineBloc);
+  WidgetsBinding.instance.addObserver(appLifecycleObserver);
+  runApp(MyApp(routineBloc: routineBloc));
 }
 
 class MyApp extends StatelessWidget {
-  final InMemoryRoutineRepository routineRepository;
-  const MyApp({Key? key, required this.routineRepository}) : super(key: key);
+  final RoutineBloc routineBloc;
+  const MyApp({Key? key, required this.routineBloc}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -27,9 +43,8 @@ class MyApp extends StatelessWidget {
         ),
         home: BlocProvider(
           create: (context) {
-            var bloc = RoutineBloc(routineRepository);
-            bloc.add(LoadAllRoutineEvent());
-            return bloc;
+            routineBloc.add(LoadAllRoutineEvent());
+            return routineBloc;
           },
           child: const HomePage(),
         ));

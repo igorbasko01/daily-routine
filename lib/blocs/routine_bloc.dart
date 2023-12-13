@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:daily_routine/blocs/routine_event.dart';
 import 'package:daily_routine/blocs/routine_state.dart';
-import 'package:daily_routine/models/routine.dart';
 import 'package:daily_routine/repositories/routine_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,18 +51,22 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
 
   FutureOr<void> _handleDayChange(HandleDayChangeRoutineEvent event, Emitter<RoutineState> emit) async {
     var routines = await _routineRepository.getAllRoutines();
-    if (routines.isEmpty) {
-      emit(LoadedAllRoutineState(routines));
-    } else {
+    if (routines.isNotEmpty) {
       var firstRoutine = routines.first;
       var now = DateTime.now();
-      var routineTime = DateTime(now.year, now.month, now.day, firstRoutine.time.hour, firstRoutine.time.minute);
-      if (now.isAfter(routineTime)) {
+      // using the time of the first routine, because can compare only the full date time and not just the date.
+      // We want to make the time identical between the next day and the first routine. Because
+      // we don't want to reset the routines if the time is after the first routine time. Only the date is what
+      // matters.
+      var nextDayTime = DateTime(now.year, now.month, now.day, firstRoutine.time.hour, firstRoutine.time.minute);
+      if (nextDayTime.isAfter(firstRoutine.time)) {
         var resetRoutines = await _routineRepository.resetAllRoutines();
         emit(LoadedAllRoutineState(resetRoutines));
       } else {
         emit(LoadedAllRoutineState(routines));
       }
+    } else {
+      emit(LoadedAllRoutineState(routines));
     }
   }
 }
