@@ -2,15 +2,17 @@
 
 A flutter app for daily routine tracking
 
-## Getting Started
+A simple flutter task list app that allows you to track your daily routine.
 
-This project is a starting point for a Flutter application.
+It allows you to create a list of tasks and mark them as done when you complete them.
 
-A few resources to get you started if this is your first Flutter project:
+It resets the tasks every day at midnight.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Screenshots
+Main
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![img_1.png](docs/img_1.png)
+
+Add Routine
+
+![img.png](docs/img.png)
