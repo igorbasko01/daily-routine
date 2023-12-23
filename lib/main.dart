@@ -12,7 +12,8 @@ class AppLifecycleObserver extends WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.resumed ||
+        state == AppLifecycleState.detached) {
       routineBloc.add(HandleDayChangeRoutineEvent());
     }
   }
@@ -30,6 +31,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final RoutineBloc routineBloc;
+
   const MyApp({Key? key, required this.routineBloc}) : super(key: key);
 
   // This widget is the root of your application.
