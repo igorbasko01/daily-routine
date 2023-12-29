@@ -14,6 +14,37 @@ void main() {
       expect(routine.time, dateTime);
       expect(routine.isCompleted, false);
     });
+
+    test('Routine initializes with default credits', () {
+      final dateTime = DateTime(2023, 11, 30, 8, 0);
+      final routine = Routine(id: 1, name: 'Morning Exercise', time: dateTime);
+
+      expect(routine.id, 1);
+      expect(routine.name, 'Morning Exercise');
+      expect(routine.time, dateTime);
+      expect(routine.isCompleted, false);
+      expect(routine.credits, 3);
+    });
+
+    test('Routine initializes with specific credits', () {
+      final dateTime = DateTime(2023, 11, 30, 8, 0);
+      final routine =
+          Routine(id: 1, name: 'Morning Exercise', time: dateTime, credits: 5);
+
+      expect(routine.id, 1);
+      expect(routine.name, 'Morning Exercise');
+      expect(routine.time, dateTime);
+      expect(routine.isCompleted, false);
+      expect(routine.credits, 5);
+    });
+
+    test('Routine throws exception if initializes with negative credits', () {
+      final dateTime = DateTime(2023, 11, 30, 8, 0);
+      expect(
+          () => Routine(
+              id: 1, name: 'Morning Exercise', time: dateTime, credits: -1),
+          throwsAssertionError);
+    });
   });
 
   group('Routine Model Json Serialization', () {
@@ -68,7 +99,8 @@ void main() {
     group('copyWith', () {
       test('Routine is correctly copied with new id', () {
         final dateTime = DateTime(2023, 11, 30, 8, 0);
-        final routine = Routine(id: 1, name: 'Morning Exercise', time: dateTime);
+        final routine =
+            Routine(id: 1, name: 'Morning Exercise', time: dateTime);
         final newRoutine = routine.copyWith(id: 2);
 
         expect(newRoutine.id, 2);
@@ -79,7 +111,8 @@ void main() {
 
       test('Routine is correctly copied with new name', () {
         final dateTime = DateTime(2023, 11, 30, 8, 0);
-        final routine = Routine(id: 1, name: 'Morning Exercise', time: dateTime);
+        final routine =
+            Routine(id: 1, name: 'Morning Exercise', time: dateTime);
         final newRoutine = routine.copyWith(name: 'Evening Exercise');
 
         expect(newRoutine.id, 1);
@@ -90,7 +123,8 @@ void main() {
 
       test('Routine is correctly copied with new time', () {
         final dateTime = DateTime(2023, 11, 30, 8, 0);
-        final routine = Routine(id: 1, name: 'Morning Exercise', time: dateTime);
+        final routine =
+            Routine(id: 1, name: 'Morning Exercise', time: dateTime);
         final newDateTime = DateTime(2023, 11, 30, 18, 0);
         final newRoutine = routine.copyWith(time: newDateTime);
 
@@ -102,7 +136,8 @@ void main() {
 
       test('Routine is correctly copied with new isCompleted', () {
         final dateTime = DateTime(2023, 11, 30, 8, 0);
-        final routine = Routine(id: 1, name: 'Morning Exercise', time: dateTime);
+        final routine =
+            Routine(id: 1, name: 'Morning Exercise', time: dateTime);
         final newRoutine = routine.copyWith(isCompleted: true);
 
         expect(newRoutine.id, 1);
@@ -113,9 +148,14 @@ void main() {
 
       test('Routine is correctly copied with multiple new values', () {
         final dateTime = DateTime(2023, 11, 30, 8, 0);
-        final routine = Routine(id: 1, name: 'Morning Exercise', time: dateTime);
+        final routine =
+            Routine(id: 1, name: 'Morning Exercise', time: dateTime);
         final newDateTime = DateTime(2023, 11, 30, 18, 0);
-        final newRoutine = routine.copyWith(id: 2, name: 'Evening Exercise', time: newDateTime, isCompleted: true);
+        final newRoutine = routine.copyWith(
+            id: 2,
+            name: 'Evening Exercise',
+            time: newDateTime,
+            isCompleted: true);
 
         expect(newRoutine.id, 2);
         expect(newRoutine.name, 'Evening Exercise');

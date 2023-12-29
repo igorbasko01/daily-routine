@@ -4,12 +4,16 @@ class Routine {
   final String name;
   final DateTime time;
   final bool isCompleted;
+  final int credits;
 
   Routine(
       {required this.id,
       required this.name,
       required this.time,
-      this.isCompleted = false});
+      this.isCompleted = false,
+      this.credits = 3}) {
+    assert(credits >= 0);
+  }
 
   Routine copyWith({int? id, String? name, DateTime? time, bool? isCompleted}) {
     return Routine(
