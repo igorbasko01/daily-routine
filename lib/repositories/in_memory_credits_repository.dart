@@ -4,12 +4,14 @@ class InMemoryCreditsRepository implements CreditsRepository {
   int _credits = 0;
 
   InMemoryCreditsRepository({int credits = 0}) {
+    assert(credits >= 0);
     _credits = credits;
   }
 
   @override
   void addCredits(int credits) {
-    // TODO: implement addCredits
+    assert(credits >= 0);
+    _credits += credits;
   }
 
   @override
@@ -17,6 +19,8 @@ class InMemoryCreditsRepository implements CreditsRepository {
 
   @override
   void withdrawCredits(int credits) {
-    // TODO: implement withdrawCredits
+    assert(credits >= 0);
+    assert(_credits >= credits);
+    _credits -= credits;
   }
 }
