@@ -12,5 +12,12 @@ void main() {
         build: () => CreditsBloc(repository: InMemoryCreditsRepository()),
         act: (bloc) => bloc.add(GetCreditsEvent()),
         expect: () => [CurrentAmountCreditsState(credits: 0)]);
+
+    blocTest<CreditsBloc, CreditsState>(
+        'initialized with 5 credits, returns 5 credits when asked for credits',
+        build: () =>
+            CreditsBloc(repository: InMemoryCreditsRepository(credits: 5)),
+        act: (bloc) => bloc.add(GetCreditsEvent()),
+        expect: () => [CurrentAmountCreditsState(credits: 5)]);
   });
 }
