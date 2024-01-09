@@ -17,3 +17,19 @@ class CurrentAmountCreditsState extends CreditsState {
   @override
   int get hashCode => credits.hashCode;
 }
+
+class ErrorCreditsState extends CreditsState {
+  final String message;
+
+  ErrorCreditsState({required this.message});
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is ErrorCreditsState && other.message == message;
+  }
+
+  @override
+  int get hashCode => message.hashCode;
+}
