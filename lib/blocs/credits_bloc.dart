@@ -11,6 +11,7 @@ class CreditsBloc extends Bloc<CreditsEvent, CreditsState> {
   CreditsBloc({required this.repository}) : super(CreditsInitial()) {
     on<GetCreditsEvent>(_onGetCredits);
     on<AddCreditsEvent>(_onAddCredits);
+    on<WithdrawCreditsEvent>(_onWithdrawCredits);
   }
 
   FutureOr<void> _onGetCredits(GetCreditsEvent event, Emitter<CreditsState> emit) {
@@ -23,6 +24,19 @@ class CreditsBloc extends Bloc<CreditsEvent, CreditsState> {
       return Future.value();
     }
     repository.addCredits(event.amount);
+    emit(CurrentAmountCreditsState(credits: repository.credits));
+  }
+
+  FutureOr<void> _onWithdrawCredits(WithdrawCreditsEvent event, Emitter<CreditsState> emit) {
+    if (event.amount < 0) {
+      emit(ErrorCreditsState(message: "Cannot withdraw negative credits"));
+      return Future.value();
+    }
+    if (event.amount > repository.credits) {
+      emit(ErrorCreditsState(message: "Cannot withdraw more credits than available"));
+      return Future.value();
+    }
+    repository.withdrawCredits(event.amount);
     emit(CurrentAmountCreditsState(credits: repository.credits));
   }
 }
