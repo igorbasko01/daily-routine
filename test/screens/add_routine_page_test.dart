@@ -1,4 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:daily_routine/blocs/credits_bloc.dart';
+import 'package:daily_routine/blocs/credits_event.dart';
+import 'package:daily_routine/blocs/credits_state.dart';
 import 'package:daily_routine/blocs/routine_bloc.dart';
 import 'package:daily_routine/blocs/routine_event.dart';
 import 'package:daily_routine/blocs/routine_state.dart';
@@ -13,15 +16,21 @@ import 'package:mocktail/mocktail.dart';
 class MockRoutineBloc extends MockBloc<RoutineEvent, RoutineState>
     implements RoutineBloc {}
 
+class MockCreditsBloc extends MockBloc<CreditsEvent, CreditsState>
+    implements CreditsBloc {}
+
 void main() {
   MockRoutineBloc? mockRoutineBloc;
+  MockCreditsBloc? mockCreditsBloc;
 
   setUp(() {
     mockRoutineBloc = MockRoutineBloc();
+    mockCreditsBloc = MockCreditsBloc();
   });
 
   tearDown(() {
     mockRoutineBloc?.close();
+    mockCreditsBloc?.close();
   });
 
   testWidgets('page contains a field for entering name of routine',
@@ -84,11 +93,15 @@ void main() {
   testWidgets('pressing the addRoutineButton navigates to the HomePage',
       (widgetTester) async {
     when(() => mockRoutineBloc?.state).thenReturn(LoadedAllRoutineState([]));
+    when(() => mockCreditsBloc?.state).thenReturn(CurrentAmountCreditsState(credits: 0));
     // start from home page to see that the navigation from AddRoutinePage
     // is actually navigates back to the home page.
     await widgetTester.pumpWidget(MaterialApp(
-      home: BlocProvider<RoutineBloc>.value(
-        value: mockRoutineBloc!,
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<RoutineBloc>.value(value: mockRoutineBloc!),
+          BlocProvider<CreditsBloc>.value(value: mockCreditsBloc!),
+        ],
         child: const HomePage(),
       ),
     ));

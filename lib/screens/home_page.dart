@@ -1,3 +1,5 @@
+import 'package:daily_routine/blocs/credits_bloc.dart';
+import 'package:daily_routine/blocs/credits_state.dart';
 import 'package:daily_routine/blocs/routine_bloc.dart';
 import 'package:daily_routine/blocs/routine_event.dart';
 import 'package:daily_routine/blocs/routine_state.dart';
@@ -49,6 +51,7 @@ class HomePage extends StatelessWidget {
         },
         child: const Icon(Icons.add),
       ),
+      bottomSheet: _bottomSheet(),
     );
   }
   
@@ -84,5 +87,17 @@ class HomePage extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget _bottomSheet() {
+    return BlocBuilder<CreditsBloc, CreditsState>(builder: (blocContext, state) {
+      if (state is CreditsInitial) {
+        return const Text('Loading...');
+      } else if (state is CurrentAmountCreditsState) {
+        return Text('Credits: ${state.credits}', key: const Key('credits'),);
+      } else {
+        return const Text('Something went wrong.');
+      }
+    });
   }
 }

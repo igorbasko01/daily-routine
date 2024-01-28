@@ -1,4 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:daily_routine/blocs/credits_bloc.dart';
+import 'package:daily_routine/blocs/credits_event.dart';
+import 'package:daily_routine/blocs/credits_state.dart';
 import 'package:daily_routine/blocs/routine_bloc.dart';
 import 'package:daily_routine/blocs/routine_event.dart';
 import 'package:daily_routine/blocs/routine_state.dart';
@@ -13,25 +16,35 @@ import 'package:mocktail/mocktail.dart';
 class MockRoutineBloc extends MockBloc<RoutineEvent, RoutineState>
     implements RoutineBloc {}
 
+class MockCreditsBloc extends MockBloc<CreditsEvent, CreditsState>
+    implements CreditsBloc {}
+
 void main() {
   MockRoutineBloc? mockRoutineBloc;
+  MockCreditsBloc? mockCreditsBloc;
 
   setUp(() {
     mockRoutineBloc = MockRoutineBloc();
+    mockCreditsBloc = MockCreditsBloc();
   });
 
   tearDown(() {
     mockRoutineBloc?.close();
+    mockCreditsBloc?.close();
   });
 
   testWidgets(
       'Main Home Page has a title and a welcome message when no routines',
       (widgetTester) async {
     when(() => mockRoutineBloc?.state).thenReturn(LoadedAllRoutineState([]));
+    when(() => mockCreditsBloc?.state).thenReturn(CurrentAmountCreditsState(credits: 0));
 
     await widgetTester.pumpWidget(MaterialApp(
-      home: BlocProvider<RoutineBloc>.value(
-        value: mockRoutineBloc!,
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<RoutineBloc>.value(value: mockRoutineBloc!),
+          BlocProvider<CreditsBloc>.value(value: mockCreditsBloc!),
+        ],
         child: const HomePage(),
       ),
     ));
@@ -46,10 +59,14 @@ void main() {
     when(() => mockRoutineBloc?.state).thenReturn(LoadedAllRoutineState([
       Routine(id: 1, name: 'Morning Exercise', time: DateTime(2023, 11, 30, 8, 0))
     ]));
+    when(() => mockCreditsBloc?.state).thenReturn(CurrentAmountCreditsState(credits: 0));
 
     await widgetTester.pumpWidget(MaterialApp(
-      home: BlocProvider<RoutineBloc>.value(
-        value: mockRoutineBloc!,
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<RoutineBloc>.value(value: mockRoutineBloc!),
+          BlocProvider<CreditsBloc>.value(value: mockCreditsBloc!),
+        ],
         child: const HomePage(),
       ),
     ));
@@ -64,10 +81,14 @@ void main() {
       Routine(id: 2, name: 'Afternoon Exercise', time: DateTime(2023, 11, 30, 13, 0)),
       Routine(id: 3, name: 'Evening Exercise', time: DateTime(2023, 11, 30, 18, 0))
     ]));
+    when(() => mockCreditsBloc?.state).thenReturn(CurrentAmountCreditsState(credits: 0));
 
     await widgetTester.pumpWidget(MaterialApp(
-      home: BlocProvider<RoutineBloc>.value(
-        value: mockRoutineBloc!,
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<RoutineBloc>.value(value: mockRoutineBloc!),
+          BlocProvider<CreditsBloc>.value(value: mockCreditsBloc!),
+        ],
         child: const HomePage(),
       ),
     ));
@@ -84,10 +105,14 @@ void main() {
     when(() => mockRoutineBloc?.state).thenReturn(LoadedAllRoutineState([
       Routine(id: 1, name: 'Morning Exercise', time: DateTime(2023, 11, 30, 8, 0))
     ]));
+    when(() => mockCreditsBloc?.state).thenReturn(CurrentAmountCreditsState(credits: 0));
 
     await widgetTester.pumpWidget(MaterialApp(
-      home: BlocProvider<RoutineBloc>.value(
-        value: mockRoutineBloc!,
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<RoutineBloc>.value(value: mockRoutineBloc!),
+          BlocProvider<CreditsBloc>.value(value: mockCreditsBloc!),
+        ],
         child: const HomePage(),
       ),
     ));
@@ -102,10 +127,14 @@ void main() {
     when(() => mockRoutineBloc?.state).thenReturn(LoadedAllRoutineState([
       Routine(id: 1, name: 'Morning Exercise', time: DateTime(2023, 11, 30, 8, 0))
     ]));
+    when(() => mockCreditsBloc?.state).thenReturn(CurrentAmountCreditsState(credits: 0));
 
     await widgetTester.pumpWidget(MaterialApp(
-      home: BlocProvider<RoutineBloc>.value(
-        value: mockRoutineBloc!,
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<RoutineBloc>.value(value: mockRoutineBloc!),
+          BlocProvider<CreditsBloc>.value(value: mockCreditsBloc!),
+        ],
         child: const HomePage(),
       ),
     ));
@@ -118,10 +147,14 @@ void main() {
 
   testWidgets('the page has a floating button for adding routines when there are no routines', (widgetTester) async {
     when(() => mockRoutineBloc?.state).thenReturn(LoadedAllRoutineState([]));
+    when(() => mockCreditsBloc?.state).thenReturn(CurrentAmountCreditsState(credits: 0));
 
     await widgetTester.pumpWidget(MaterialApp(
-      home: BlocProvider<RoutineBloc>.value(
-        value: mockRoutineBloc!,
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<RoutineBloc>.value(value: mockRoutineBloc!),
+          BlocProvider<CreditsBloc>.value(value: mockCreditsBloc!),
+        ],
         child: const HomePage(),
       ),
     ));
@@ -134,10 +167,14 @@ void main() {
     when(() => mockRoutineBloc?.state).thenReturn(LoadedAllRoutineState([
       Routine(id: 1, name: 'Morning Exercise', time: DateTime(2023, 11, 30, 8, 0))
     ]));
+    when(() => mockCreditsBloc?.state).thenReturn(CurrentAmountCreditsState(credits: 0));
 
     await widgetTester.pumpWidget(MaterialApp(
-      home: BlocProvider<RoutineBloc>.value(
-        value: mockRoutineBloc!,
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<RoutineBloc>.value(value: mockRoutineBloc!),
+          BlocProvider<CreditsBloc>.value(value: mockCreditsBloc!),
+        ],
         child: const HomePage(),
       ),
     ));
@@ -148,10 +185,14 @@ void main() {
 
   testWidgets('pressing the addRoutineButton navigates to the AddRoutinePage', (widgetTester) async {
     when(() => mockRoutineBloc?.state).thenReturn(LoadedAllRoutineState([]));
+    when(() => mockCreditsBloc?.state).thenReturn(CurrentAmountCreditsState(credits: 0));
 
     await widgetTester.pumpWidget(MaterialApp(
-      home: BlocProvider<RoutineBloc>.value(
-        value: mockRoutineBloc!,
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<RoutineBloc>.value(value: mockRoutineBloc!),
+          BlocProvider<CreditsBloc>.value(value: mockCreditsBloc!),
+        ],
         child: const HomePage(),
       ),
     ));
@@ -161,5 +202,26 @@ void main() {
     await widgetTester.tap(floatingButtonFinder);
     await widgetTester.pumpAndSettle();
     expect(find.byType(AddRoutinePage), findsOneWidget);
+  });
+
+  testWidgets('current credits are shown at bottom of screen', (widgetTester) async {
+    when(() => mockRoutineBloc?.state).thenReturn(LoadedAllRoutineState([]));
+    when(() => mockCreditsBloc?.state).thenReturn(CurrentAmountCreditsState(credits: 10));
+
+    await widgetTester.pumpWidget(MaterialApp(
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<RoutineBloc>.value(value: mockRoutineBloc!),
+          BlocProvider<CreditsBloc>.value(value: mockCreditsBloc!),
+        ],
+        child: const HomePage(),
+      ),
+    ));
+
+    var creditsFinder = find.byKey(const Key('credits'));
+    var textWidget = widgetTester.widget<Text>(creditsFinder);
+    var text = textWidget.data;
+    expect(creditsFinder, findsOneWidget);
+    expect(text, 'Credits: 10');
   });
 }
