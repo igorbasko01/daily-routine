@@ -15,12 +15,14 @@ class Routine {
     assert(credits >= 0);
   }
 
-  Routine copyWith({int? id, String? name, DateTime? time, bool? isCompleted}) {
+  Routine copyWith({int? id, String? name, DateTime? time, bool? isCompleted, int? credits}) {
     return Routine(
         id: id ?? this.id,
         name: name ?? this.name,
         time: time ?? this.time,
-        isCompleted: isCompleted ?? this.isCompleted);
+        isCompleted: isCompleted ?? this.isCompleted,
+        credits: credits ?? this.credits,
+    );
   }
 
   toggleCompleted() {
@@ -32,7 +34,8 @@ class Routine {
       'id': id,
       'name': name,
       'time': time.toIso8601String(),
-      'isCompleted': isCompleted
+      'isCompleted': isCompleted,
+      'credits': credits
     };
   }
 
@@ -41,7 +44,9 @@ class Routine {
         id: json['id'],
         name: json['name'],
         time: DateTime.parse(json['time']),
-        isCompleted: json['isCompleted']);
+        isCompleted: json['isCompleted'],
+        credits: json['credits'] ?? 0
+    );
   }
 
   @override
