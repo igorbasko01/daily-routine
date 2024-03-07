@@ -66,7 +66,7 @@ class HomePage extends StatelessWidget {
             value: routine.isCompleted,
             onChanged: (value) {
               BlocProvider.of<RoutineBloc>(context).add(
-                  UpdateRoutineEvent(routine.toggleCompleted()));
+                  MarkCompleteRoutineEvent(routine.id));
             },
           ),
           title: Text(routines[index].name),

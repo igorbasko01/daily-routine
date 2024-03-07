@@ -84,5 +84,32 @@ void main() {
       await repository.addRoutine(routine);
       expect(() => repository.deleteRoutine(2), throwsA(isA<RoutineNotFoundException>()));
     });
+
+    test('Marking a routine complete marks the routine as complete', () async {
+      final repository = InMemoryRoutineRepository();
+      final dateTime = DateTime(2023, 11, 30, 8, 0);
+      final routine = Routine(id: 1, name: 'Morning Exercise', time: dateTime);
+      await repository.addRoutine(routine);
+      final markedRoutine = await repository.markRoutineComplete(routine.id);
+      expect(markedRoutine, routine.copyWith(isCompleted: true));
+    });
+
+    test('Marking a routine complete that does not exist returns null', () async {
+      final repository = InMemoryRoutineRepository();
+      final dateTime = DateTime(2023, 11, 30, 8, 0);
+      final routine = Routine(id: 1, name: 'Morning Exercise', time: dateTime);
+      await repository.addRoutine(routine);
+      final markedRoutine = await repository.markRoutineComplete(2);
+      expect(markedRoutine, null);
+    });
+
+    test('Marking a routine complete that was already complete returns the routine', () async {
+      final repository = InMemoryRoutineRepository();
+      final dateTime = DateTime(2023, 11, 30, 8, 0);
+      final routine = Routine(id: 1, name: 'Morning Exercise', time: dateTime, isCompleted: true);
+      await repository.addRoutine(routine);
+      final markedRoutine = await repository.markRoutineComplete(routine.id);
+      expect(markedRoutine, routine);
+    });
   });
 }

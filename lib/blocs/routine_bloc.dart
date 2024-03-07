@@ -15,6 +15,7 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     on<DeleteRoutineEvent>(_deleteRoutine);
     on<ResetAllRoutineEvent>(_resetAllRoutines);
     on<HandleDayChangeRoutineEvent>(_handleDayChange);
+    on<MarkCompleteRoutineEvent>(_markCompleteRoutine);
   }
 
   FutureOr<void> _loadAllRoutines(LoadAllRoutineEvent event, Emitter<RoutineState> emit) async {
@@ -77,5 +78,14 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     } else {
       return false;
     }
+  }
+
+  FutureOr<void> _markCompleteRoutine(MarkCompleteRoutineEvent event, Emitter<RoutineState> emit) async {
+    var routine = await _routineRepository.markRoutineComplete(event.id);
+    if (routine != null) {
+      emit(MarkedAsCompletedRoutineState(routine));
+    }
+    var allRoutines = await _routineRepository.getAllRoutines();
+    emit(LoadedAllRoutineState(allRoutines));
   }
 }

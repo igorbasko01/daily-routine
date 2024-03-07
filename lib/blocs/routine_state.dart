@@ -15,3 +15,9 @@ class ErrorRoutineState extends RoutineState {
 
   ErrorRoutineState(this.exception);
 }
+
+class MarkedAsCompletedRoutineState extends RoutineState {
+  final Routine routine;
+
+  MarkedAsCompletedRoutineState(this.routine);
+}

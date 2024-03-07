@@ -95,4 +95,15 @@ class InMemoryRoutineRepository implements RoutineRepository {
     List<dynamic> jsonList = jsonDecode(json);
     return jsonList.map((json) => Routine.fromJson(json)).toList();
   }
+
+  @override
+  Future<Routine?> markRoutineComplete(int id) async {
+    final index = _routines.indexWhere((element) => element.id == id);
+    if (index == -1) {
+      return null;
+    }
+    _routines[index] = _routines[index].copyWith(isCompleted: true);
+    await saveRoutines(_routines);
+    return _routines[index];
+  }
 }

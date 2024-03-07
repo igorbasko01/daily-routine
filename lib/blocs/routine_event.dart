@@ -36,3 +36,9 @@ class DeleteRoutineEvent extends RoutineEvent {
 class ResetAllRoutineEvent extends RoutineEvent {}
 
 class HandleDayChangeRoutineEvent extends RoutineEvent {}
+
+class MarkCompleteRoutineEvent extends RoutineEvent {
+  final int id;
+
+  MarkCompleteRoutineEvent(this.id);
+}
