@@ -16,6 +16,7 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     on<ResetAllRoutineEvent>(_resetAllRoutines);
     on<HandleDayChangeRoutineEvent>(_handleDayChange);
     on<MarkCompleteRoutineEvent>(_markCompleteRoutine);
+    on<MarkIncompleteRoutineEvent>(_markIncompleteRoutine);
   }
 
   FutureOr<void> _loadAllRoutines(LoadAllRoutineEvent event, Emitter<RoutineState> emit) async {
@@ -84,6 +85,15 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     var routine = await _routineRepository.markRoutineComplete(event.id);
     if (routine != null) {
       emit(MarkedAsCompletedRoutineState(routine));
+    }
+    var allRoutines = await _routineRepository.getAllRoutines();
+    emit(LoadedAllRoutineState(allRoutines));
+  }
+
+  FutureOr<void> _markIncompleteRoutine(MarkIncompleteRoutineEvent event, Emitter<RoutineState> emit) async {
+    var routine = await _routineRepository.markRoutineIncomplete(event.id);
+    if (routine != null) {
+      emit(MarkedAsIncompleteRoutineState(routine));
     }
     var allRoutines = await _routineRepository.getAllRoutines();
     emit(LoadedAllRoutineState(allRoutines));

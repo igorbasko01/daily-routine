@@ -106,4 +106,15 @@ class InMemoryRoutineRepository implements RoutineRepository {
     await saveRoutines(_routines);
     return _routines[index];
   }
+
+  @override
+  Future<Routine?> markRoutineIncomplete(int id) async {
+    final index = _routines.indexWhere((element) => element.id == id);
+    if (index == -1) {
+      return null;
+    }
+    _routines[index] = _routines[index].copyWith(isCompleted: false);
+    await saveRoutines(_routines);
+    return _routines[index];
+  }
 }

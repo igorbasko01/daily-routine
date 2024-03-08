@@ -526,5 +526,107 @@ void main() {
                     !state.routines[2].isCompleted;
               }),
             ]);
+
+    blocTest('Marking a routine incomplete emits a MarkedAsIncompleteRoutineState with the routine',
+        build: () => RoutineBloc(InMemoryRoutineRepository(initialRoutines: [
+              Routine(
+                  id: 1,
+                  name: 'Morning Exercise',
+                  time: DateTime(2023, 11, 30, 8, 0),
+                  isCompleted: true),
+              Routine(
+                  id: 2,
+                  name: 'Afternoon Exercise',
+                  time: DateTime(2023, 11, 30, 13, 0),
+                  isCompleted: true),
+              Routine(
+                  id: 3,
+                  name: 'Evening Exercise',
+                  time: DateTime(2023, 11, 30, 18, 0),
+                  isCompleted: true)
+            ])),
+        act: (bloc) {
+          bloc.add(MarkIncompleteRoutineEvent(1));
+        },
+        expect: () => [
+              predicate<MarkedAsIncompleteRoutineState>((state) {
+                return state.routine.id == 1 &&
+                    state.routine.name == 'Morning Exercise' &&
+                    state.routine.time == DateTime(2023, 11, 30, 8, 0) &&
+                    !state.routine.isCompleted;
+              }),
+              predicate<LoadedAllRoutineState>((state) {
+                return state.routines.length == 3 &&
+                    !state.routines[0].isCompleted &&
+                    state.routines[1].isCompleted &&
+                    state.routines[2].isCompleted;
+              }),
+            ]);
+
+    blocTest('Marking a non existent routine as incomplete doesnt emit a MarkedAsIncompleteRoutineState',
+        build: () => RoutineBloc(InMemoryRoutineRepository(initialRoutines: [
+              Routine(
+                  id: 1,
+                  name: 'Morning Exercise',
+                  time: DateTime(2023, 11, 30, 8, 0),
+                  isCompleted: true),
+              Routine(
+                  id: 2,
+                  name: 'Afternoon Exercise',
+                  time: DateTime(2023, 11, 30, 13, 0),
+                  isCompleted: true),
+              Routine(
+                  id: 3,
+                  name: 'Evening Exercise',
+                  time: DateTime(2023, 11, 30, 18, 0),
+                  isCompleted: true)
+            ])),
+        act: (bloc) {
+          bloc.add(MarkIncompleteRoutineEvent(4));
+        },
+        expect: () => [
+              predicate<LoadedAllRoutineState>((state) {
+                return state.routines.length == 3 &&
+                    state.routines[0].isCompleted &&
+                    state.routines[1].isCompleted &&
+                    state.routines[2].isCompleted;
+              }),
+            ]);
+
+    blocTest('Marking a routine incomplete that is already incomplete emits a MarkedAsIncompleteRoutineState with the routine',
+        build: () => RoutineBloc(InMemoryRoutineRepository(initialRoutines: [
+              Routine(
+                  id: 1,
+                  name: 'Morning Exercise',
+                  time: DateTime(2023, 11, 30, 8, 0),
+                  isCompleted: false),
+              Routine(
+                  id: 2,
+                  name: 'Afternoon Exercise',
+                  time: DateTime(2023, 11, 30, 13, 0),
+                  isCompleted: true),
+              Routine(
+                  id: 3,
+                  name: 'Evening Exercise',
+                  time: DateTime(2023, 11, 30, 18, 0),
+                  isCompleted: true)
+            ])),
+        act: (bloc) {
+          bloc.add(MarkIncompleteRoutineEvent(1));
+        },
+        expect: () => [
+              predicate<MarkedAsIncompleteRoutineState>((state) {
+                return state.routine.id == 1 &&
+                    state.routine.name == 'Morning Exercise' &&
+                    state.routine.time == DateTime(2023, 11, 30, 8, 0) &&
+                    !state.routine.isCompleted;
+              }),
+              predicate<LoadedAllRoutineState>((state) {
+                return state.routines.length == 3 &&
+                    !state.routines[0].isCompleted &&
+                    state.routines[1].isCompleted &&
+                    state.routines[2].isCompleted;
+              }),
+            ]);
   });
 }

@@ -21,3 +21,9 @@ class MarkedAsCompletedRoutineState extends RoutineState {
 
   MarkedAsCompletedRoutineState(this.routine);
 }
+
+class MarkedAsIncompleteRoutineState extends RoutineState {
+  final Routine routine;
+
+  MarkedAsIncompleteRoutineState(this.routine);
+}

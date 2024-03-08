@@ -44,17 +44,17 @@ class HomePage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         key: const Key('addRoutineButton'),
         onPressed: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => BlocProvider.value(
-                value: BlocProvider.of<RoutineBloc>(context),
-                child: const AddRoutinePage())));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => BlocProvider.value(
+                  value: BlocProvider.of<RoutineBloc>(context),
+                  child: const AddRoutinePage())));
         },
         child: const Icon(Icons.add),
       ),
       bottomSheet: _bottomSheet(),
     );
   }
-  
+
   Widget _listOfRoutines(List<Routine> routines) {
     return ListView.builder(
       itemCount: routines.length,
@@ -65,8 +65,14 @@ class HomePage extends StatelessWidget {
             key: const Key('checkButton'),
             value: routine.isCompleted,
             onChanged: (value) {
-              BlocProvider.of<RoutineBloc>(context).add(
-                  MarkCompleteRoutineEvent(routine.id));
+              if (value != null && value) {
+                BlocProvider.of<RoutineBloc>(context)
+                    .add(MarkCompleteRoutineEvent(routine.id));
+              }
+              else {
+                BlocProvider.of<RoutineBloc>(context)
+                    .add(MarkIncompleteRoutineEvent(routine.id));
+              }
             },
           ),
           title: Text(routines[index].name),
@@ -90,11 +96,15 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _bottomSheet() {
-    return BlocBuilder<CreditsBloc, CreditsState>(builder: (blocContext, state) {
+    return BlocBuilder<CreditsBloc, CreditsState>(
+        builder: (blocContext, state) {
       if (state is CreditsInitial) {
         return const Text('Loading...');
       } else if (state is CurrentAmountCreditsState) {
-        return Text('Credits: ${state.credits}', key: const Key('credits'),);
+        return Text(
+          'Credits: ${state.credits}',
+          key: const Key('credits'),
+        );
       } else {
         return const Text('Something went wrong.');
       }

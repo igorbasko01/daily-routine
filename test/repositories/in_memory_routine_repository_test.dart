@@ -111,5 +111,32 @@ void main() {
       final markedRoutine = await repository.markRoutineComplete(routine.id);
       expect(markedRoutine, routine);
     });
+
+    test('Marking a routine incomplete marks the routine as incomplete', () async {
+      final repository = InMemoryRoutineRepository();
+      final dateTime = DateTime(2023, 11, 30, 8, 0);
+      final routine = Routine(id: 1, name: 'Morning Exercise', time: dateTime, isCompleted: true);
+      await repository.addRoutine(routine);
+      final markedRoutine = await repository.markRoutineIncomplete(routine.id);
+      expect(markedRoutine, routine.copyWith(isCompleted: false));
+    });
+
+    test('Marking a routine incomplete that does not exist returns null', () async {
+      final repository = InMemoryRoutineRepository();
+      final dateTime = DateTime(2023, 11, 30, 8, 0);
+      final routine = Routine(id: 1, name: 'Morning Exercise', time: dateTime, isCompleted: true);
+      await repository.addRoutine(routine);
+      final markedRoutine = await repository.markRoutineIncomplete(2);
+      expect(markedRoutine, null);
+    });
+
+    test('Marking a routine incomplete that was already incomplete returns the routine', () async {
+      final repository = InMemoryRoutineRepository();
+      final dateTime = DateTime(2023, 11, 30, 8, 0);
+      final routine = Routine(id: 1, name: 'Morning Exercise', time: dateTime);
+      await repository.addRoutine(routine);
+      final markedRoutine = await repository.markRoutineIncomplete(routine.id);
+      expect(markedRoutine, routine);
+    });
   });
 }

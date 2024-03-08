@@ -42,3 +42,9 @@ class MarkCompleteRoutineEvent extends RoutineEvent {
 
   MarkCompleteRoutineEvent(this.id);
 }
+
+class MarkIncompleteRoutineEvent extends RoutineEvent {
+  final int id;
+
+  MarkIncompleteRoutineEvent(this.id);
+}
