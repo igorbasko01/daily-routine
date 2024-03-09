@@ -25,13 +25,15 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
   }
 
   FutureOr<void> _addRoutine(AddRoutineEvent event, Emitter<RoutineState> emit) async {
-    var allRoutines = await _routineRepository.addRoutine(event.routine);
+    await _routineRepository.addRoutine(event.routine);
+    var allRoutines = await _routineRepository.getAllRoutines();
     emit(LoadedAllRoutineState(allRoutines));
   }
 
   FutureOr<void> _updateRoutine(UpdateRoutineEvent event, Emitter<RoutineState> emit) async {
     try {
-      var allRoutines = await _routineRepository.updateRoutine(event.routine);
+      await _routineRepository.updateRoutine(event.routine);
+      var allRoutines = await _routineRepository.getAllRoutines();
       emit(LoadedAllRoutineState(allRoutines));
     } on RoutineNotFoundException catch (e) {
       emit(ErrorRoutineState(e));
@@ -40,7 +42,8 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
 
   FutureOr<void> _deleteRoutine(DeleteRoutineEvent event, Emitter<RoutineState> emit) async {
     try {
-      var allRoutines = await _routineRepository.deleteRoutine(event.id);
+      await _routineRepository.deleteRoutine(event.id);
+      var allRoutines = await _routineRepository.getAllRoutines();
       emit(LoadedAllRoutineState(allRoutines));
     } on RoutineNotFoundException catch (e) {
       emit(ErrorRoutineState(e));
@@ -48,7 +51,8 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
   }
 
   FutureOr<void> _resetAllRoutines(ResetAllRoutineEvent event, Emitter<RoutineState> emit) async {
-    var routines = await _routineRepository.resetAllRoutines();
+    await _routineRepository.resetAllRoutines();
+    var routines = await _routineRepository.getAllRoutines();
     emit(LoadedAllRoutineState(routines));
   }
 
@@ -73,7 +77,8 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     // matters.
     var nextDayTime = DateTime(now.year, now.month, now.day, routine.time.hour, routine.time.minute);
     if (nextDayTime.isAfter(routine.time)) {
-      var resetRoutines = await _routineRepository.resetAllRoutines();
+      await _routineRepository.resetAllRoutines();
+      var resetRoutines = await _routineRepository.getAllRoutines();
       emit(LoadedAllRoutineState(resetRoutines));
       return true;
     } else {

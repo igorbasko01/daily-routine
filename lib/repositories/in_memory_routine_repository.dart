@@ -25,44 +25,41 @@ class InMemoryRoutineRepository implements RoutineRepository {
   }
 
   @override
-  Future<List<Routine>> addRoutine(Routine routine) async {
+  Future<void> addRoutine(Routine routine) async {
     final newId =
         (_routines.isEmpty) ? 1 : (_routines.map((e) => e.id).reduce(max) + 1);
     final newRoutine = routine.copyWith(id: newId);
     _routines.add(newRoutine);
     await saveRoutines(_routines);
-    return _routines;
   }
 
   /// Updates a routine in the repository.
   /// Throws a [RoutineNotFoundException] if the routine is not found.
   @override
-  Future<List<Routine>> updateRoutine(Routine routine) async {
+  Future<void> updateRoutine(Routine routine) async {
     final index = _routines.indexWhere((element) => element.id == routine.id);
     if (index == -1) {
       throw RoutineNotFoundException('Routine with id ${routine.id} not found');
     }
     _routines[index] = routine;
     await saveRoutines(_routines);
-    return _routines;
   }
 
   /// Deletes a routine from the repository.
   /// Throws a [RoutineNotFoundException] if the routine is not found.
   @override
-  Future<List<Routine>> deleteRoutine(int id) async {
+  Future<void> deleteRoutine(int id) async {
     final index = _routines.indexWhere((element) => element.id == id);
     if (index == -1) {
       throw RoutineNotFoundException('Routine with id $id not found');
     }
     _routines.removeAt(index);
     await saveRoutines(_routines);
-    return _routines;
   }
 
   /// Resets all routines in the repository.
   @override
-  Future<List<Routine>> resetAllRoutines() async {
+  Future<void> resetAllRoutines() async {
     var now = DateTime.now();
     var newRoutines = _routines
         .map((routine) {
@@ -74,7 +71,6 @@ class InMemoryRoutineRepository implements RoutineRepository {
     _routines.clear();
     _routines.addAll(newRoutines);
     await saveRoutines(_routines);
-    return _routines;
   }
 
   /// Saves the routines to shared preferences.

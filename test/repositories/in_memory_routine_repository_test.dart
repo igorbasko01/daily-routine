@@ -43,8 +43,9 @@ void main() {
       final routine1 = Routine(id: 1, name: 'Morning Exercise', time: dateTime);
       final routine2 = Routine(id: 1, name: 'Morning Exercise', time: dateTime);
       await repository.addRoutine(routine1);
-      final addedRoutine2 = await repository.addRoutine(routine2);
-      expect(addedRoutine2, [routine1, routine2.copyWith(id: 2)]);
+      await repository.addRoutine(routine2);
+      final allRoutines = await repository.getAllRoutines();
+      expect(allRoutines, [routine1, routine2.copyWith(id: 2)]);
     });
 
     test('Updating a routine updates the routine', () async {
