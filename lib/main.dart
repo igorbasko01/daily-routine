@@ -5,6 +5,7 @@ import 'package:daily_routine/blocs/routine_event.dart';
 import 'package:daily_routine/repositories/in_memory_credits_repository.dart';
 import 'package:daily_routine/repositories/in_memory_routine_repository.dart';
 import 'package:daily_routine/screens/home_page.dart';
+import 'package:daily_routine/services/user_activity_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,6 +32,10 @@ void main() async {
 
   var creditsRepository = await InMemoryCreditsRepository.create();
   var creditsBloc = CreditsBloc(repository: creditsRepository);
+
+  // Initialize a coordinating service. No need to pass it to any widget.
+  // It lives as long as the app lives.
+  UserActivityManager(routineBloc: routineBloc, creditsBloc: creditsBloc);
 
   var appLifecycleObserver = AppLifecycleObserver(routineBloc);
   WidgetsBinding.instance.addObserver(appLifecycleObserver);
