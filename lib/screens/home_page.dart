@@ -52,6 +52,7 @@ class HomePage extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
       bottomSheet: _bottomSheet(),
+      bottomNavigationBar: _bottomNavigationBar(),
     );
   }
 
@@ -109,5 +110,14 @@ class HomePage extends StatelessWidget {
         return const Text('Something went wrong.');
       }
     });
+  }
+
+  Widget _bottomNavigationBar() {
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Routines'),
+        BottomNavigationBarItem(icon: Icon(Icons.chair), label: 'Rewards')
+      ],
+    );
   }
 }
